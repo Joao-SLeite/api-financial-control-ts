@@ -28,6 +28,7 @@ export class Transaction {
 
     @OneToMany(() => Installment, (installment) => installment.transaction, {
         cascade: true,
+        onDelete: 'CASCADE',
     })
     installments: Installment[];
 }
