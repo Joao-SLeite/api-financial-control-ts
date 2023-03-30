@@ -69,9 +69,17 @@ export class TransactionService {
             ) {
                 const installments: Installment[] = [];
                 transactionUpdate.installmentsNumber = installmentsNumber;
+                const installmentsToDelete = transactionUpdate.installments;
+
                 transactionUpdate.installments = [];
+                await Promise.all(
+                    installmentsToDelete.map((installment) => {
+                        installmentRepository.delete(installment.id);
+                    })
+                );
+                const creationDate = transactionUpdate.creationDate;
                 for (let i = 0; i < iTransaction.installmentsNumber; i++) {
-                    const dueDate = transactionUpdate.creationDate;
+                    const dueDate = new Date(creationDate);
                     dueDate.setMonth(dueDate.getMonth() + i);
 
                     const installment = new Installment();
@@ -79,6 +87,7 @@ export class TransactionService {
                         transactionUpdate.amount /
                         transactionUpdate.installmentsNumber;
                     installment.dueDate = dueDate;
+
                     installment.installmentNumber = i + 1;
                     installments.push(installment);
                 }
