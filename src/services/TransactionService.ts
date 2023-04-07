@@ -109,8 +109,8 @@ export class TransactionService {
         });
 
         const installments = transaction.installments;
-        transaction.installments = [];
-        await transactionRepository.save(transaction);
+        // transaction.installments = [];
+        // await transactionRepository.save(transaction);
 
         await Promise.all(
             installments.map((installment) => {
