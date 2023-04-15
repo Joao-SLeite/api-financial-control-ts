@@ -1,15 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
+import { ApiError } from '../helpers/apiErrors';
 
 export const handleServerError = (
-    error: Error,
+    error: Error & Partial<ApiError>,
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     if (error) {
-        return res
-            .status(500)
-            .send({ message: 'Erro ao tentar conectar ao servidor' });
+        const statusCode = error.statusCode ?? 500;
+        const message = error.statusCode
+            ? error.message
+            : 'Erro ao tentar conectar ao servidor';
+        return res.status(statusCode).send({ message });
     }
     next();
 };

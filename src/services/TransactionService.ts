@@ -1,5 +1,6 @@
 import { Installment } from '../entities/Installment';
 import { Transaction } from '../entities/Transaction';
+import { ApiError, NotFoundError } from '../helpers/apiErrors';
 import { ITransaction } from '../interfaces/ITransaction';
 import { installmentRepository } from '../repositories/installmentRepository';
 import { transactionRepository } from '../repositories/transactionRepository';
@@ -98,15 +99,23 @@ export class TransactionService {
                 await transactionRepository.save(transactionUpdate);
                 return transactionUpdate;
             }
+        } else {
+            throw new NotFoundError(
+                `A transação com o id: ${id} não foi encontrada`
+            );
         }
-
-        return null;
     }
     async deleteTransaction(id: number): Promise<void> {
-        const transaction = await transactionRepository.findOneOrFail({
+        const transaction = await transactionRepository.findOne({
             where: { id: id },
             relations: { installments: true },
         });
+
+        if (!transaction) {
+            throw new NotFoundError(
+                `A transação com o id: ${id} não foi encontrada`
+            );
+        }
 
         const installments = transaction.installments;
         // transaction.installments = [];

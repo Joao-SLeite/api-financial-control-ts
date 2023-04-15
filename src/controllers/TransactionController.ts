@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { ITransaction } from '../interfaces/ITransaction';
 import { TransactionService } from '../services/TransactionService';
+import { BadRequestError } from '../helpers/apiErrors';
 
 export class TransactionController {
     async getTransactions(req: Request, res: Response) {
@@ -22,6 +23,9 @@ export class TransactionController {
         const iTransaction: ITransaction = req.body;
         const { id } = req.params;
         iTransaction.id = parseInt(id);
+        if (!iTransaction.id || !iTransaction) {
+            throw new BadRequestError('Dados não válidos');
+        }
         const transactionService = new TransactionService();
         await transactionService.updateTransaction(iTransaction);
         return res.status(204).json();
