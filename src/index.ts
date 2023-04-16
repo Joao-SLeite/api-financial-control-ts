@@ -9,9 +9,7 @@ AppDataSource.initialize().then(() => {
     const app = express();
 
     app.use(express.json());
-    app.get('/', () => {
-        throw new ApiError('Pagina nao encontrada', 404);
-    });
+
     app.use(routes);
 
     app.use(handleUrlNotFound);

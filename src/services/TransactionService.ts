@@ -1,6 +1,6 @@
 import { Installment } from '../entities/Installment';
 import { Transaction } from '../entities/Transaction';
-import { ApiError, NotFoundError } from '../helpers/apiErrors';
+import { NotFoundError } from '../helpers/apiErrors';
 import { ITransaction } from '../interfaces/ITransaction';
 import { installmentRepository } from '../repositories/installmentRepository';
 import { transactionRepository } from '../repositories/transactionRepository';
@@ -118,8 +118,6 @@ export class TransactionService {
         }
 
         const installments = transaction.installments;
-        // transaction.installments = [];
-        // await transactionRepository.save(transaction);
 
         await Promise.all(
             installments.map((installment) => {

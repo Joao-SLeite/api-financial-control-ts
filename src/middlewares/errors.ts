@@ -16,6 +16,7 @@ export const handleServerError = (
     }
     next();
 };
+
 export const handleUrlNotFound = (req: Request, res: Response) => {
     return res.status(404).json({ message: 'Pagina não encontrada' });
 };
