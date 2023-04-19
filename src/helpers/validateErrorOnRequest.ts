@@ -17,3 +17,14 @@ export const isThereErrorOnReqBodyTransaction = (reqBody: any): boolean => {
     }
     return false;
 };
+
+export const isThereErrorOnReqQueryInstallment = (reqQuery: any): boolean => {
+    if (!reqQuery) {
+        return true;
+    }
+    const { month, year } = reqQuery;
+    if (!Number(month) || !Number(year) || String(year).length < 4) {
+        return true;
+    }
+    return false;
+};
