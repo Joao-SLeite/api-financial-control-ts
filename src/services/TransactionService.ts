@@ -60,7 +60,6 @@ export class TransactionService {
             relations: { installments: true },
         });
         if (transactionUpdate) {
-            transactionUpdate.amount = amount;
             transactionUpdate.description = description;
             transactionUpdate.typeTransaction = typeTransaction;
 
@@ -68,6 +67,7 @@ export class TransactionService {
                 installmentsNumber !== transactionUpdate.installmentsNumber ||
                 amount !== transactionUpdate.amount
             ) {
+                transactionUpdate.amount = amount;
                 const installments: Installment[] = [];
                 transactionUpdate.installmentsNumber = installmentsNumber;
                 const installmentsToDelete = transactionUpdate.installments;
@@ -118,13 +118,14 @@ export class TransactionService {
         }
 
         const installments = transaction.installments;
+        transaction.installments = [];
 
         await Promise.all(
             installments.map((installment) => {
                 installmentRepository.delete(installment.id);
             })
         );
-
+        await transactionRepository.save(transaction);
         await transactionRepository.delete(transaction.id);
     }
 }
